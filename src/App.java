@@ -1,12 +1,12 @@
 import processing.core.*;
 
 public class App extends PApplet {
-    int circleX = 0;
-    int circleY = 0;
+    int circleX = 250;
+    int circleY = 250;
     int cirleSpeed = 5;
-    int rectX = 0;
-    int rectY = 0;
+    int heroy = 415;
     int herox = 50;
+    int herow = 200;
 
     float velocity;
     float accelration;
@@ -16,7 +16,6 @@ public class App extends PApplet {
     }
 
     public void setup() {
-
         accelration = .1f;
         velocity = 3;
     }
@@ -29,19 +28,19 @@ public class App extends PApplet {
         background(100);
         velocity += accelration;
         circleY += velocity;
-        if (circleY >= 415) {
-            circleY = 415;
-            velocity = 0;
-        }
-        if (circleY >= 415) {
+      
+        if (circleY >= heroy && circleX >= herox && circleX <= herox + herow) { // code: if it doesn't touch padel then just go off the screen 
+            print("bounce");
              velocity = -10;
         }
-        if (circleY <= 0 ){
-            velocity = 10;
-        }
+       // if (circleY == 0) { 
+           // background (255);
+      //  }
 
-        circle(250, circleY, 30);
-        rect(herox, 430, 200, 50);
+       
+    
+        circle(circleX, circleY, 30);
+        rect(herox, heroy, herow, 50);
     }
 
     public void keyPressed() {
