@@ -1,21 +1,27 @@
 import processing.core.*;
 
 public class App extends PApplet {
-    int circleX, circleY;
-    int circleSpeed = 5;
-    int heroy = 415;
-    int herox = 50;
-    int herow = 200;
-    int heroh = 50;
+    //ball
+    float circleX, circleY;
+    float circleSpeed = 3;
+    
+    //padle
+    float heroy = 415;
+    float herox = 50;
+    float herow = 200;
+    float heroh = 50;
 
-    int increaseSpeed;
+    //game start
+    float ballHit = 0;
+    float score = 0;
+    float scene = 1;
 
-    int scene = 1;
-
-    float velocity;
+    float velocityY; // vertical speed
+    float velocityX; // horizontal speed
     float accelration;
+    float speedMultiplier = 1; //speed
 
-    int score = 0;
+   
 
     public static void main(String[] args) {
         PApplet.main("App");
@@ -24,7 +30,7 @@ public class App extends PApplet {
     public void setup() {
         textSize(25);
         accelration = .1f;
-        int circleSpeed = 5;
+       
         resetGame();
     }
 
@@ -37,7 +43,7 @@ public class App extends PApplet {
             gameplay();
               text ("Bounce: " + score, 0, 50);
 
-              text ("Circle Speed = " +   circleSpeed, 0, 75);
+              text ("Circle Speed = " +   speedMultiplier, 0, 75);
               
               
 
@@ -50,27 +56,38 @@ public class App extends PApplet {
 
     public void gameplay() {
         background(100);
-        velocity += accelration;
-        circleY += velocity;
+        velocityY += accelration;
+        circleY += velocityY; 
+        circleX += velocityX; // Moves the ball
+       
+
+        if (circleY <= 0) { // Means the ball went off of the top of the screen
+            velocityY = abs(velocityY); //abs = absolute value, makes the ball go down once it hits the top, if sign was -5 it becomes 5, if was 5 it stays as 5
+        }
+        if (circleX <= 0 || circleX >= width){ // Checking if the ball hit the side
+            velocityX = -velocityX; // If it did than change the direction of the ball, does this by changing the sign
+          
+        }
     
-        if (circleY >= heroy && circleX >= herox && circleX <= herox + herow) { // code: if it doesn't touch padel
-                                                                                // then just go off the screen
-            println("bounce");
-            velocity = -10;
-
-            println(score);
-            score ++;
-
-            println("increase speed");
-            circleSpeed = 5;
+        if (circleY >= heroy && circleX >= herox && circleX <= herox + herow) { // if it doesn't touch padel, then just go off the screen
             
-           
+            ballHit += 1; //increases bounce count
+            velocityX = random (-3,3); // Everytime it hits padel, it chooses a random number between -3, 3  
+
+            println("bounce");
+            velocityY = -10 * speedMultiplier; 
+            if (ballHit % 5 == 0){
+                speedMultiplier += 0.2; // Everytime ball gets to a multiple of five bounces it increases the speed by 0.2 
+            }
+            println(score);
+            score ++;  
+              
         }
 
         if (circleY >= 500) {
-            scene = 2;
+            scene = 2; // When ball hits the floor goes to scene two
         }
-       
+
         circle(circleX, circleY, 30);
         rect(herox, heroy, herow, heroh);
     }
@@ -78,9 +95,9 @@ public class App extends PApplet {
     public void keyPressed() {
 
         if (keyCode == LEFT) {
-            herox -= 10;
+            herox -= 20;
         } else if (keyCode == RIGHT) {
-            herox += 10;
+            herox += 20;
         }
 
         if (key == ' ') {
@@ -93,7 +110,8 @@ public class App extends PApplet {
     public void resetGame() {
         circleX = 250;
         circleY = 250;
-        velocity = 3;
+        velocityY = 3;
+        speedMultiplier = 1;
         herox = 50;
         heroy = 415;
         score = 0;
