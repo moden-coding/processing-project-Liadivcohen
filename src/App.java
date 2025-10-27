@@ -3,7 +3,14 @@ import processing.core.*;
 public class App extends PApplet {
     //ball
     float circleX, circleY;
-    float circleSpeed = 3;
+    
+    //target
+    float targetX;
+    float targetY;
+    float targetSize = 30;
+
+
+
     
     //padle
     float heroy = 415;
@@ -30,8 +37,12 @@ public class App extends PApplet {
     public void setup() {
         textSize(25);
         accelration = .1f;
-       
         resetGame();
+
+        circle (targetX, targetY, 30);
+        targetX = random(95, 5);
+        targetY = random (50, 100);
+       
     }
 
     public void settings() {
@@ -52,6 +63,8 @@ public class App extends PApplet {
             text("Game over", 50, 250);
             text("Press space bar to play again", 50, 285);
         }
+
+       
     }
 
     public void gameplay() {
@@ -88,8 +101,13 @@ public class App extends PApplet {
             scene = 2; // When ball hits the floor goes to scene two
         }
 
+        circle (targetX, targetY, 30);
+    
         circle(circleX, circleY, 30);
         rect(herox, heroy, herow, heroh);
+
+        
+    
     }
 
     public void keyPressed() {
