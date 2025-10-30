@@ -3,9 +3,11 @@ import processing.core.*;
 public class App extends PApplet {
     // ball
     float circleX, circleY;
+    
 
     // high score
-    float highscore = 0;
+    float highscore = -1;
+    float previousScore = 0;
 
     // padle
     float heroy = 415;
@@ -24,7 +26,10 @@ public class App extends PApplet {
     float velocityY; // vertical speed
     float velocityX; // horizontal speed
     float accelration;
-    float speedMultiplier = 1; // speed
+    float speedMultiplier = 1; 
+    float R=0;
+    float G=0;
+    float B=0;
 
     public static void main(String[] args) {
         PApplet.main("App");
@@ -34,9 +39,11 @@ public class App extends PApplet {
         textSize(25);
         accelration = .1f;
         resetGame();
+       
 
         left = false;
         right = false;
+
 
     }
 
@@ -46,7 +53,7 @@ public class App extends PApplet {
 
     public void draw() {
         
-
+ 
         if (scene == 1) {
             gameplay();
             text("Bounce: " + score, 0, 50);
@@ -56,8 +63,10 @@ public class App extends PApplet {
             background(0);
             text("Game over", 50, 250);
             text("Press space bar to play again", 50, 285);
-            text ("highscore: " + highscore,50, 315);
+            text("You score is: " + score, 50, 350);
+            text ("Your highscore is: " + highscore,50, 315);
         }
+        // makes the padel move smoothly
 
         if (left == true && herox > 0) {
             herox -= 10;
@@ -67,6 +76,7 @@ public class App extends PApplet {
             herox += 10;
 
         }
+
         if (score > highscore){
             highscore = score;
         }
@@ -79,50 +89,57 @@ public class App extends PApplet {
         circleY += velocityY;
         circleX += velocityX;
 
-        if (circleY <= 0) { // Means the ball went off of the top of the screen
-            velocityY = abs(velocityY); // abs = absolute value, makes the ball go down once it hits the top, if sign
-                                        // was -5 it becomes 5, if was 5 it stays as 5
+        //Deticts if the ball went off or on the side of the screen, if it does makes it switch directions
+
+        if (circleY <= 0) { 
+            velocityY = abs(velocityY); // abs = absolute value if was -5 it becomes 5, if was 5 it stays as 5
         }
-        if (circleX <= 0 || circleX >= width) { // Checking if the ball hit the side
-            velocityX = -velocityX; // If it did than change the direction of the ball, does this by changing the
-                                    // sign
+        if (circleX <= 0 || circleX >= width) { 
+            velocityX = -velocityX; 
 
         }
 
         if (circleY >= heroy && circleX >= herox && circleX <= herox + herow) { // if it doesn't touch padel, then just
                                                                                 // go off the screen
 
-            ballHit += 1; // increases bounce count
-            velocityX = random(-3, 3); // Everytime it hits padel, it chooses a random number between -3, 3
+                                                                                
+            // When the ball hits the padel, than it chooses a random point to go to. When bounces gets to 3 increase speed.
+            ballHit += 1; 
+            velocityX = random(-3, 3);
+            R=random (0,255);
+            G=random (0,255);
+            B=random (0,255);
 
             println("bounce");
             velocityY = -10 * speedMultiplier;
             if (ballHit % 3 == 0) {
-                speedMultiplier += 0.2; // Everytime ball gets to a multiple of five bounces it increases the speed by
-                                        // 0.2
+                speedMultiplier += 0.2; 
             }
             println(score);
             score++;
 
         }
-        if (score >= 500){
-            if (score > highscore){
-                highscore = score;
-            }
-        }
-
+        // keeps track of high score
+        
         if (circleY >= 500) {
-            scene = 2; 
+             if (score > highscore){
+                highscore = score;
+        } else{
+            score=ballHit;
         }
 
-       
 
-        circle(circleX, circleY, 30);
-        rect(herox, heroy, herow, heroh);
-
+        scene = 2;
     }
+    fill (R,G,B);
+    circle(circleX, circleY, 30);
+    fill(255);
+    rect(herox, heroy, herow, heroh);
+}
 
     public void keyPressed() {
+
+        //The controls and what happens when you press them
 
         if (keyCode == LEFT) {
             left = true;
